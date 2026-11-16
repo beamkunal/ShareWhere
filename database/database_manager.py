@@ -15,8 +15,8 @@ from datetime import datetime
 # DATABASE FILE LOCATION
 # ==================================================
 
-# Project ke main folder ka location find karna
-PROJECT_FOLDER = Path(__file__).resolve().parents[2]
+# Project ka root folder find karna
+PROJECT_FOLDER = Path(__file__).resolve().parents[1]
 
 # Database file ka naam aur location
 DATABASE_PATH = PROJECT_FOLDER / "sharewhere.db"

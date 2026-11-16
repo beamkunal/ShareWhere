@@ -484,17 +484,47 @@ class ShareWhereApp(QMainWindow):
                 "Please enter a valid six-digit room ID."
             )
 
+    def clear_content_layout(self):
+
+        # Layout ke saare existing widgets remove karna
+        while self.content_layout.count():
+
+            item = self.content_layout.takeAt(0)
+
+            widget = item.widget()
+
+            if widget is not None:
+                widget.deleteLater()
     # ==================================================
     # SHOW DASHBOARD
     # ==================================================
 
     def show_dashboard(self):
 
-        QMessageBox.information(
-            self,
-            "Dashboard",
-            "You are already on the dashboard."
-        )
+        # Purane page ke widgets remove karna
+        self.clear_content_layout()
+
+        # Dashboard dobara display karna
+        self.create_header()
+
+        self.content_layout.addSpacing(45)
+
+        self.create_welcome_section()
+
+        self.content_layout.addSpacing(35)
+
+        self.create_action_section()
+
+        self.content_layout.addSpacing(45)
+
+        self.create_recent_transfers()
+
+        self.content_layout.addStretch()
+
+        footer = QLabel("ShareWhere  •  Desktop Application")
+        footer.setObjectName("footer")
+
+        self.content_layout.addWidget(footer)
 
     # ==================================================
     # SHOW MY ROOMS
@@ -502,42 +532,82 @@ class ShareWhereApp(QMainWindow):
 
     def show_my_rooms(self):
 
-        try:
+        # Existing page clear karna
+        self.clear_content_layout()
 
-            # Retrieve rooms from the database
-            rooms = get_all_rooms()
+        # Page heading
+        heading = QLabel("My Rooms")
+        heading.setObjectName("welcome_heading")
 
-            if not rooms:
+        self.content_layout.addWidget(heading)
 
-                message = "You have not created any rooms yet."
+        # Page description
+        description = QLabel(
+            "Manage the rooms you have created."
+        )
 
-            else:
+        description.setObjectName("welcome_description")
 
-                message = "Your saved rooms:\n\n"
+        self.content_layout.addWidget(description)
 
-                for room in rooms:
+        self.content_layout.addSpacing(30)
 
-                    message += (
-                        f"Room name: {room['room_name']}\n"
-                        f"Room ID: {room['room_id']}\n"
-                        f"Role: {room['role']}\n"
-                        f"Created: {room['created_at']}\n"
-                        "-----------------------------\n"
-                    )
+        # Database se saved rooms retrieve karna
+        rooms = get_all_rooms()
 
-            QMessageBox.information(
-                self,
-                "My Rooms",
-                message
+        if not rooms:
+
+            empty_message = QLabel(
+                "No rooms created yet. Create your first room!"
             )
 
-        except Exception as error:
+            empty_message.setObjectName("empty_description")
 
-            QMessageBox.critical(
-                self,
-                "Database error",
-                str(error)
-            )
+            self.content_layout.addWidget(empty_message)
+
+        else:
+
+            # Har saved room ka card banana
+            for room in rooms:
+                room_card = QFrame()
+                room_card.setObjectName("action_card")
+
+                room_layout = QVBoxLayout()
+                room_layout.setContentsMargins(20, 15, 20, 15)
+
+                room_card.setLayout(room_layout)
+
+                room_name = QLabel(room["room_name"])
+                room_name.setObjectName("card_title")
+
+                room_id = QLabel(
+                    f"Room ID: {room['room_id']}"
+                )
+
+                room_id.setObjectName("card_description")
+
+                room_role = QLabel(
+                    f"Your role: {room['role']}"
+                )
+
+                room_role.setObjectName("card_description")
+
+                room_date = QLabel(
+                    f"Created: {room['created_at']}"
+                )
+
+                room_date.setObjectName("card_description")
+
+                room_layout.addWidget(room_name)
+                room_layout.addWidget(room_id)
+                room_layout.addWidget(room_role)
+                room_layout.addWidget(room_date)
+
+                self.content_layout.addWidget(room_card)
+
+                self.content_layout.addSpacing(10)
+
+        self.content_layout.addStretch()
 
     # ==================================================
     # SHOW TRANSFERS
