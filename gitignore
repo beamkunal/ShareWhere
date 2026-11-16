@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual Environment
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# Local Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment Secrets
+.env
+.env.*
+
+# Python Build
+build/
+dist/
+
+# Rust Build
+rust-engine/target/
+
+# Logs
+*.log
